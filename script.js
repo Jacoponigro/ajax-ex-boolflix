@@ -33,7 +33,7 @@ function getMovies(key) {
       },
       "method":"GET",
       "success": function(data){
-        renderMovie(data.results);
+        renderResults(data.results);
       },
       "error": function(err) {
         alert("ERRORE!");
@@ -45,22 +45,48 @@ function getMovies(key) {
 
 // funzione per stampare le voci
 
-function renderMovie(movies) {
+function renderResults(type, results) {
 
 var source = $("#template").html();
 var template = Handlebars.compile(source);
 
-for (var i = 0; i < movies.length; i++) {
+for (var i = 0; i < results.length; i++) {
+
+  var title, original_title;
+
+  if (type == "film") {
+    title = results[i].title;
+    original_title = results[i].original_title;
+  } else if (type == "tv") {
+    title = results[i].name;
+    original_title = results[i].original_name;
+  }
+
   var context = {
-    "title": movies[i].title,
-    "original_title":movies[i].original_title,
-    "original_language":movies[i].original_language,
-    "vote_average":movies[i].vote_average
+    "title": title,
+    "original_title": original_title,
+    "original_language":results[i].original_language,
+    "vote_average":results[i].vote_average
     };
 
     var html = template(context);
-    var appendo = $(".movies").append(html);
+    $(".movies").append(html);
   }
+}
+// funzione per stelline piene e vuote
+function starsAppear(number){
+  var number = Math.ceil(number / 2);
+  var string = "";
+
+  for (var i = 0; i < 6; i++) {
+    if (i <= number) {
+      string += "<i class='fas fa-star'></i>"
+    }
+    else {
+      string += "<i class='far fa-star'></i>"
+    }
+   }
+   return string;
 }
 
 // funzione per pulire input e pagina
