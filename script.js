@@ -1,43 +1,71 @@
-// document.ready
+// document ready
 
-$(document).ready(function(){
-    $("#search-movie").keydown(function(evento){
-        if(evento.which == 13){
-            searchFilm($("#search-movie").val());
-        }
-    })
+$(document).ready(function() {
+// input tramite click
 
-    $("#search-button").click()
-    searchFilm($("#search-movie").val());
+  $("#search-button").click(function(){
+  var searchMovies = $("#search-movie").val();
+  resetSearch();
+  getMovies(searchMovies)
 });
-// /document ready
+// input tramite invio
 
-function searchFilm(keyword){
-  // chiamata ajax
+$("#search-movie").keydown(function(event){
+  if (event.wich == 13) {
+    var searchMovies = $("#search-movie").val();
+    resetSearch();
+    getMovies(searchMovies)
+    }
+  });
+});
 
-    $.ajax({
-      url:"https://api.themoviedb.org/3/search/movie",
-      data: {
-          "api_key": "7b547eb1f4054ea261db5c02ae0f35d6",
-          "language": "it-IT",
-          "query": keyword,
-          "page": 1
+
+function getMovies(key) {
+// chiamata ajax
+
+  $.ajax(
+    {
+      "url": "https://api.themoviedb.org/3/search/movie",
+      "data": {
+        "api_key":"7b547eb1f4054ea261db5c02ae0f35d6",
+        "query": key,
+        "language": "it-IT"
       },
-      success: function(data,state){
-          var movieResult = data.results;
-          for(var i = 0; i < movieResult.length; i++){
-            filmAppear(movieResult[i]);
-          }
+      "method":"GET",
+      "success": function(data){
+        renderMovie(data.results);
       },
-      error: function(){
-        alert("Errore!")
-        }
-    });
-}
+      "error": function(err) {
+        alert("ERRORE!");
+      }
+    }
+  );
   // /chiamata ajax
-   // funzione filmAppear
+}
 
-function filmAppear(oggetto){
-    var template = Handlebars.compile($("#template").html());
-    $(".movies").append(template(oggetto));
+// funzione per stampare le voci
+
+function renderMovie(movies) {
+
+var source = $("#template").html();
+var template = Handlebars.compile(source);
+
+for (var i = 0; i < movies.length; i++) {
+  var context = {
+    "title": movies[i].title,
+    "original_title":movies[i].original_title,
+    "original_language":movies[i].original_language,
+    "vote_average":movies[i].vote_average
+    };
+
+    var html = template(context);
+    var appendo = $(".movies").append(html);
+  }
+}
+
+// funzione per pulire input e pagina
+
+function resetSearch(){
+  $(".movies").html("");
+  $("#search-movie").val("");
 }
