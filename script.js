@@ -80,7 +80,7 @@ for (var i = 0; i < results.length; i++) {
 
   var title, original_title, list;
 
-  if (type == "film") {
+  if (type == "movie") {
     title = results[i].title;
     original_title = results[i].original_title;
     list = $(".movies");
