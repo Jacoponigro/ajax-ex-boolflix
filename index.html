@@ -16,20 +16,19 @@
       <button id="search-button" type="button">Cerca</button>
    </header>
    <h3>LIST MOVIES</h3>
-   <ul class="movies">
+   <ul class="movies margin">
 
    </ul>
    <h3>LIST SERIES</h3>
-   <ul class="series">
+   <ul class="series margin">
 
    </ul>
    <!-- handlebars template -->
    <script id="template" type="text/x-handlebars-template">
        <li class="info">
-         <div><img src="{{poster}}" alt="{{title}}"></div>
          <h2>Titolo: {{title}}</h2>
          <h4>Titolo Originale: {{original_title}}</h4>
-         <p>lingua: {{original_language}}</p>
+         <p>lingua: {{{original_language}}}</p>
          <p>voto: {{{vote_average}}}</p>
          <p>tipo : {{type}}</p>
          <div><img src="{{poster}}" alt="{{title}}"></div>

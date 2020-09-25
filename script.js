@@ -72,7 +72,7 @@ function getSeries(key) {
 // funzione per stampare le voci
 
 function renderResults(type,results) {
-var type = "";
+
 var source = $("#template").html();
 var template = Handlebars.compile(source);
 
@@ -89,12 +89,17 @@ for (var i = 0; i < results.length; i++) {
     original_title = results[i].original_name;
     list = $(".series");
   }
+  if(results[i].poster_path == null) {
+    var poster = "img/no_poster.png";
+  } else {
+    var poster = "https://image.tmdb.org/t/p/w342"+results[i].poster_path;
+  }
 
   var context = {
-
+    "poster": poster,
     "title": title,
     "original_title": original_title,
-    "original_language": results[i].original_language,
+    "original_language": printFlags(results[i].original_language),
     "vote_average": starsAppear(results[i].vote_average),
     "type": type
     };
@@ -108,7 +113,7 @@ function starsAppear(number){
   var number = Math.ceil(number / 2);
   var string = "";
 
-  for (var i = 0; i < 6; i++) {
+  for (var i = 0; i < 5; i++) {
     if (i <= number) {
       string += "<i class='fas fa-star'></i>"
     }
@@ -118,6 +123,23 @@ function starsAppear(number){
   }
    return string;
 }
+
+function printFlags(original_language) {
+  var flags = [
+    "it",
+    "en",
+    "fr",
+    "gr",
+    "sp"
+  ];
+
+  if(flags.includes(original_language)) {
+    return "<img class='flag' src='img/" + original_language +".svg'>";
+  }
+
+  return lang;
+}
+
 
 // funzione per pulire input e pagina
 

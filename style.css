@@ -10,3 +10,9 @@ header{
 #search-button{
   height: 35px;
 }
+h3{
+  color: red;
+}
+.margin{
+  margin-bottom: 50px;
+}
