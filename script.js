@@ -89,8 +89,8 @@ for (var i = 0; i < results.length; i++) {
     original_title = results[i].original_name;
     list = $(".series");
   }
-  if(results[i].poster_path == null) {
-    var poster = "img/no_poster.png";
+  if (results[i].poster_path == null) {
+    var poster = "img/noposter.png";
   } else {
     var poster = "https://image.tmdb.org/t/p/w342"+results[i].poster_path;
   }
