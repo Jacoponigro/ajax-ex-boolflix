@@ -6,7 +6,8 @@ $(document).ready(function() {
   $("#search-button").click(function(){
   var searchMovies = $("#search-movie").val();
   resetSearch();
-  getMovies(searchMovies)
+  getMovies (searchMovies);
+  getSeries (searchMovies);
 });
 // input tramite invio
 
@@ -14,14 +15,15 @@ $("#search-movie").keydown(function(event){
   if (event.wich == 13) {
     var searchMovies = $("#search-movie").val();
     resetSearch();
-    getMovies(searchMovies)
+    getMovies (searchMovies);
+    getSeries (searchMovies);
     }
   });
 });
 
 
 function getMovies(key) {
-// chiamata ajax
+// chiamata ajax per richiamare API e stampare film
 
   $.ajax(
     {
@@ -33,7 +35,7 @@ function getMovies(key) {
       },
       "method":"GET",
       "success": function(data){
-        renderResults(data.results);
+        renderResults("movie",data.results);
       },
       "error": function(err) {
         alert("ERRORE!");
@@ -43,34 +45,62 @@ function getMovies(key) {
   // /chiamata ajax
 }
 
+
+
+function getSeries(key) {
+  // chiamata ajax per richiamare API e stampare film
+
+  $.ajax(
+    {
+      "url": "https://api.themoviedb.org/3/search/tv",
+      "data": {
+        "api_key": "7b547eb1f4054ea261db5c02ae0f35d6",
+        "query": key,
+        "language": "it-IT"
+      },
+      "method": "GET",
+      "success": function(data) {
+        renderResults("tv",data.results);
+      },
+      "error": function(err) {
+        alert("ERRORE!");
+      }
+    }
+  );
+  // /chiamata ajax
+}
 // funzione per stampare le voci
 
-function renderResults(type, results) {
-
+function renderResults(type,results) {
+var type = "";
 var source = $("#template").html();
 var template = Handlebars.compile(source);
 
 for (var i = 0; i < results.length; i++) {
 
-  var title, original_title;
+  var title, original_title, list;
 
   if (type == "film") {
     title = results[i].title;
     original_title = results[i].original_title;
+    list = $(".movies");
   } else if (type == "tv") {
     title = results[i].name;
     original_title = results[i].original_name;
+    list = $(".series");
   }
 
   var context = {
+
     "title": title,
     "original_title": original_title,
-    "original_language":results[i].original_language,
-    "vote_average":results[i].vote_average
+    "original_language": results[i].original_language,
+    "vote_average": starsAppear(results[i].vote_average),
+    "type": type
     };
 
     var html = template(context);
-    $(".movies").append(html);
+    list.append(html);
   }
 }
 // funzione per stelline piene e vuote
@@ -85,7 +115,7 @@ function starsAppear(number){
     else {
       string += "<i class='far fa-star'></i>"
     }
-   }
+  }
    return string;
 }
 
@@ -93,5 +123,6 @@ function starsAppear(number){
 
 function resetSearch(){
   $(".movies").html("");
+  $(".series").html("");
   $("#search-movie").val("");
 }
